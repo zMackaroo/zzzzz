@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Happy Valentine's Day Mom!</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(to bottom right, #ffe6e6, #ff99cc);
+        font-family: "Arial", sans-serif;
+        overflow: hidden;
+      }
+
+      .container {
+        text-align: center;
+        z-index: 1;
+      }
+
+      .mom-photo {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 8px solid white;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        margin: 20px;
+      }
+
+      .message {
+        color: #d4145a;
+        font-size: 2.5em;
+        margin: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .quote {
+        color: #666;
+        font-style: italic;
+        font-size: 1.2em;
+        max-width: 600px;
+        margin: 20px;
+      }
+
+      .flowers {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        height: 200px;
+        background: url("https://png.pngtree.com/png-clipart/20230217/original/pngtree-beautiful-pink-rose-bouquet-png-image_8955127.png")
+          repeat-x bottom;
+        background-size: contain;
+        z-index: 0;
+      }
+
+      canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="fireworks"></canvas>
+    <div class="container">
+      <img src="mom-photo.jpg" alt="Mom's Photo" class="mom-photo" />
+      <div class="message">Happy Valentine's Day Mom!</div>
+      <div class="quote">
+        "A mother's love is the heart of a family, nurturing us with endless
+        care and unconditional affection. You are the embodiment of love itself,
+        and I'm blessed to call you Mom."
+      </div>
+    </div>
+    <div class="flowers"></div>
+
+    <script>
+      // Fireworks animation
+      const canvas = document.getElementById("fireworks");
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      class Particle {
+        constructor(x, y, color) {
+          this.x = x;
+          this.y = y;
+          this.color = color;
+          this.velocity = {
+            x: (Math.random() - 0.5) * 8,
+            y: (Math.random() - 0.5) * 8,
+          };
+          this.alpha = 1;
+          this.friction = 0.99;
+        }
+
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.alpha;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+          ctx.restore();
+        }
+
+        update() {
+          this.velocity.x *= this.friction;
+          this.velocity.y *= this.friction;
+          this.x += this.velocity.x;
+          this.y += this.velocity.y;
+          this.alpha -= 0.01;
+        }
+      }
+
+      let particles = [];
+
+      function createFirework(x, y) {
+        const colors = ["#ff0000", "#ff69b4", "#ff1493", "#ff00ff"];
+        for (let i = 0; i < 50; i++) {
+          particles.push(
+            new Particle(
+              x,
+              y,
+              colors[Math.floor(Math.random() * colors.length)]
+            )
+          );
+        }
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        particles = particles.filter((particle) => particle.alpha > 0);
+        particles.forEach((particle) => {
+          particle.update();
+          particle.draw();
+        });
+
+        if (Math.random() < 0.03) {
+          createFirework(
+            Math.random() * canvas.width,
+            Math.random() * canvas.height * 0.6
+          );
+        }
+      }
+
+      animate();
+
+      window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+    </script>
+  </body>
+</html>
